@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Smart Serve</title>
+  <style>
+    table {
+      width:100%;
+    }
+    table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 15px;
+      text-align: left;
+    }
+    #t01 tr:nth-child(even) {
+      background-color: #eee;
+    }
+    #t01 tr:nth-child(odd) {
+     background-color: #fff;
+    }
+    #t01 th {
+      background-color: black;
+      color: white;
+    }
+    button {
+background-color: #04AA6D;
+color: white;
+padding: 14px 20px;
+margin: 8px 0;
+border: none;
+cursor: pointer;
+width: 100%;
+}
+
+button:hover {
+opacity: 0.8;
+}
+    </style>
+</head>
+
+<body>
+  <table id="t01">
+    <thead>    <tr>
+        <th>Title</th>
+        <th>Price</th>
+      </tr></thead>
+<tbody id="tablerows">
+
+</tbody>
+  </table>
+  
+</body>
+<script>
+  var table=document.getElementById("tablerows");
+  function prepareCell(title,price){
+      var row=table.insertRow();
+      var titlecell=row.insertCell(0);
+      var pricecell=row.insertCell(1);
+      titlecell.innerHTML=title;
+      pricecell.innerHTML=price;    
+  } 
+  function reorderData(data1){
+    const data = Object.entries(data1).map((e) => {
+      return e[1]  ;
+    });
+    data.sort((a, b) => (b.popularity - a.popularity));
+    for(var i=0;i<data.length;i++){
+          prepareCell(data[i].title,data[i].price);
+      }
+  }
+  function initialize(){
+  fetch('https://s3.amazonaws.com/open-to-cors/assignment.json')
+  .then(res=>res.json())
+  .then(data=>{
+    reorderData(data.products);
+  })
+  }
+
+  window.addEventListener('load',initialize);
+
+</script>
+
+</html>
